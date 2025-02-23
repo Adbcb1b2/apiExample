@@ -5,45 +5,36 @@ const tableHead = document.getElementById('tableHead');
 const tableBody = document.getElementById('tableBody');
 const tableTitle = document.getElementById('tableHeading');
 
-fetchUsersButton.addEventListener("click", async() => {
-    const data = await fetchUsers();
+// Event listeners for buttons
+fetchUsersButton.addEventListener("click", async () => {
+    const data = await fetchData('https://jsonplaceholder.typicode.com/users');
     populateTable(data);
-    tableTitle.innerHTML = `User Data`;
+    tableTitle.innerHTML = 'User Data';
 });
 
-fetchPostsButton.addEventListener("click", async() => {
-    const data = await fetchPosts();
+fetchPostsButton.addEventListener("click", async () => {
+    const data = await fetchData('https://jsonplaceholder.typicode.com/posts');
     populateTable(data);
-    tableTitle.innerHTML = `Post Data`;
-
+    tableTitle.innerHTML = 'Post Data';
 });
 
-async function fetchUsers() {
-    try{
-        let response = await fetch('https://jsonplaceholder.typicode.com/users');
+// Function to fetch data
+async function fetchData(url) {
+    try {
+        let response = await fetch(url);
         let data = await response.json();
         console.log(data); // Testing
         return data;
-    }catch(error){
-        console.log("Error fetching user data", error);
+    } catch (error) {
+        console.log("Error fetching data", error);
+        return null;  // Return null in case of an error
     }
 }
 
-async function fetchPosts() {
-    try{
-        let response = await fetch('https://jsonplaceholder.typicode.com/posts');
-        let data = await response.json();
-        console.log(data); // Testing
-        return data;
-    }catch(error){
-        console.log("Error fetching post data", error);
-    }
-
-}
-
-function populateTable(data){
+// Function to populate the table
+function populateTable(data) {
     // Check if there is data to populate the table
-    if(!data){
+    if (!data) {
         console.log("No data to populate table");
         return;
     }
@@ -53,7 +44,7 @@ function populateTable(data){
     tableBody.innerHTML = "";
 
     // Dynamically generate table headers
-    const headers = Object.keys(data[0]); // Get table the keys from the first object = table headers
+    const headers = Object.keys(data[0]); // Get table headers from the first object
     let headerRow = "<tr>";
     headers.forEach(header => {
         headerRow += `<th>${header}</th>`;
@@ -75,8 +66,4 @@ function populateTable(data){
 
     // Insert the body content into the table
     tableBody.innerHTML = bodyContent;
-    
-
-    
 }
-
